@@ -1619,6 +1619,14 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     if (hit != null) {
       float distance = hit.distance * cos(rayAngle - p.angle);
       float wallHeight = (tileSize * h) / distance;
+
+      // Make pine trees (tiles 2 and 3) tower over the arena
+      boolean isPineTree = (hit.wallType == 2 || hit.wallType == 3);
+      float treeHeightMultiplier = 2.5; // Trees are 2.5x taller than normal walls
+      if (isPineTree) {
+        wallHeight *= treeHeightMultiplier;
+      }
+
       PImage tex = wallTextures[hit.wallType];
       int texSize = tex.width;
       int texX = int(hit.textureX * texSize) % texSize;
@@ -1627,10 +1635,20 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
       float brightness = map(distance, 0, maxDepth, 1.0, 0.2);
       brightness = constrain(brightness, 0.2, 1.0);
       if (hit.horizontal) brightness *= 0.7;
+
+      // For pine trees, apply gradient brightness (darker at top for canopy effect)
       for (int y = 0; y < wallHeight; y++) {
         int texY = int(map(y, 0, wallHeight, 0, texSize)) % texSize;
         color c = tex.pixels[texY * texSize + texX];
-        fill(red(c) * brightness, green(c) * brightness, blue(c) * brightness);
+
+        float finalBrightness = brightness;
+        if (isPineTree) {
+          // Add subtle darkening toward the top of the tree (canopy effect)
+          float heightFactor = map(y, 0, wallHeight, 1.0, 0.7);
+          finalBrightness *= heightFactor;
+        }
+
+        fill(red(c) * finalBrightness, green(c) * finalBrightness, blue(c) * finalBrightness);
         noStroke();
         rect(x, h/2 - wallHeight/2 + y, sliceWidth, 2);
       }
