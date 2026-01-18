@@ -54,6 +54,7 @@ int numMaps = 3;
 
 // Map
 int mapSize = 16;
+int mapSizeBeach = 24; // Beach map is larger
 int tileSize = 50;
 int[][] currentMap;
 
@@ -100,25 +101,33 @@ int[][] mapForestClearing = {
 };
 
 // Sunset Beach map
-// Wall types: 1=rock wall, 2=palm tree, 3=palm tree variant, 4=beach hut
-// 6=beach umbrella, 7=shoreline (special - rendered as water on floor), 8=coral/rocks
+// 9=invisible shoreline barrier
+// Beach map uses sprite-based obstacles instead of wall tiles
 int[][] mapSunsetBeach = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,2,0,0,0,0,0,0,7,7,7,7,7,7,1},
-  {1,0,0,0,4,0,0,0,7,7,7,7,7,7,7,1},
-  {1,2,0,0,0,0,0,7,7,7,8,7,7,7,7,1},
-  {1,0,0,6,0,0,7,7,7,7,7,7,7,7,7,1},
-  {1,0,0,0,0,0,7,7,7,7,7,7,7,7,7,1},
-  {1,0,3,0,0,7,7,7,7,7,7,7,7,7,7,1},
-  {1,0,0,0,0,7,7,7,8,7,7,7,7,7,7,1},
-  {1,0,4,0,7,7,7,7,7,7,7,7,7,7,7,1},
-  {1,0,0,6,7,7,7,7,7,7,7,7,7,7,7,1},
-  {1,2,0,0,7,7,7,7,7,7,7,8,7,7,7,1},
-  {1,0,0,0,0,7,7,7,7,7,7,7,7,7,7,1},
-  {1,0,0,6,0,0,7,7,7,7,7,7,7,7,7,1},
-  {1,3,0,0,0,0,0,7,7,7,7,7,7,7,7,1},
-  {1,0,2,0,0,0,0,0,7,7,7,7,7,7,7,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+  {1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+  {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9}
 };
 
 // Reference to active map (will point to one of the above)
@@ -180,6 +189,13 @@ PImage healthKitSprite;
 ArrayList<BloodParticle> bloodParticles = new ArrayList<BloodParticle>();
 ArrayList<BloodPool> bloodPools = new ArrayList<BloodPool>();
 
+// Beach obstacles (sprite-based for beach map)
+ArrayList<BeachObstacle> beachObstacles = new ArrayList<BeachObstacle>();
+PImage palmTreeSprite;
+PImage palmTreeSprite2;
+PImage beachUmbrellaSprite;
+PImage sailboatSprite;
+
 // Spawn points for random respawning (grid coordinates)
 int[][] spawnPoints = {
   {1, 1},    // Top-left
@@ -231,7 +247,29 @@ void selectMap(int mapIndex) {
     wallTextures = wallTexturesBeach;
     floorTexture = floorTextureBeach;
     skyboxTexture = skyboxTextureBeach;
+    initializeBeachObstacles();
   }
+}
+
+void initializeBeachObstacles() {
+  beachObstacles.clear();
+
+  // Add palm trees scattered across the beach
+  beachObstacles.add(new BeachObstacle(150, 150, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(250, 300, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(180, 450, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(350, 200, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(300, 550, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(420, 380, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(150, 700, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(280, 900, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(400, 750, 20, palmTreeSprite, "palm1"));
+
+  // Add beach umbrellas
+  beachObstacles.add(new BeachObstacle(200, 600, 15, beachUmbrellaSprite, "umbrella"));
+  beachObstacles.add(new BeachObstacle(350, 500, 15, beachUmbrellaSprite, "umbrella"));
+  beachObstacles.add(new BeachObstacle(280, 220, 15, beachUmbrellaSprite, "umbrella"));
+  beachObstacles.add(new BeachObstacle(450, 650, 15, beachUmbrellaSprite, "umbrella"));
 }
 
 void draw() {
@@ -410,18 +448,20 @@ void drawMapSelectScreen() {
   
   // Draw minimap preview
   int[][] previewMap;
+  int currentMapSize = mapSize;
   if (currentMapIndex == 0) {
     previewMap = mapClassicCargo;
   } else if (currentMapIndex == 1) {
     previewMap = mapForestClearing;
   } else {
     previewMap = mapSunsetBeach;
+    currentMapSize = mapSizeBeach;
   }
-  float cellW = previewW / mapSize;
-  float cellH = previewH / mapSize;
-  
-  for (int y = 0; y < mapSize; y++) {
-    for (int x = 0; x < mapSize; x++) {
+  float cellW = previewW / currentMapSize;
+  float cellH = previewH / currentMapSize;
+
+  for (int y = 0; y < currentMapSize; y++) {
+    for (int x = 0; x < currentMapSize; x++) {
       int cell = previewMap[y][x];
       if (cell == 0) {
         // Floor
@@ -438,6 +478,9 @@ void drawMapSelectScreen() {
       } else if (cell == 7) {
         // Shoreline (beach only)
         fill(30, 120, 180);
+      } else if (cell == 9) {
+        // Ocean/invisible barrier (beach only)
+        fill(40, 130, 200);
       } else {
         // Walls
         if (currentMapIndex == 0) {
@@ -455,11 +498,7 @@ void drawMapSelectScreen() {
         } else {
           // Beach colors
           if (cell == 1) fill(180, 170, 160); // Rock walls
-          else if (cell == 2) fill(80, 120, 40); // Palm tree
-          else if (cell == 3) fill(70, 110, 35); // Palm variant
-          else if (cell == 4) fill(200, 180, 140); // Beach hut
-          else if (cell == 6) fill(200, 100, 120); // Beach umbrella
-          else if (cell == 8) fill(100, 90, 85); // Coral/rocks
+          else fill(220, 200, 160); // Default to sand
         }
       }
       rect(previewX + x * cellW, previewY + y * cellH, cellW + 1, cellH + 1);
@@ -923,6 +962,16 @@ void loadTextures() {
   if (skyboxTextureBeach == null) skyboxTextureBeach = createSunsetSkyboxTexture();
   shorelineTexture = loadImageSafe("beach_water.png");
   if (shorelineTexture == null) shorelineTexture = createOceanTexture(texSize);
+
+  // Beach obstacle sprites
+  palmTreeSprite = loadImageSafe("palm_tree_sprite.png");
+  if (palmTreeSprite == null) palmTreeSprite = createPalmTreeSprite();
+  palmTreeSprite2 = loadImageSafe("palm_tree_sprite2.png");
+  if (palmTreeSprite2 == null) palmTreeSprite2 = createPalmTreeSprite2();
+  beachUmbrellaSprite = loadImageSafe("beach_umbrella_sprite.png");
+  if (beachUmbrellaSprite == null) beachUmbrellaSprite = createBeachUmbrellaSprite();
+  sailboatSprite = loadImageSafe("sailboat.png");
+  if (sailboatSprite == null) sailboatSprite = createSailboatSprite();
 
   // Ceiling texture (shared)
   ceilingTexture = loadImageSafe("ceiling.png");
@@ -1872,6 +1921,188 @@ PImage createSunsetSkyboxTexture() {
   return sky;
 }
 
+PImage createPalmTreeSprite() {
+  // Create a tall palm tree sprite (flat, billboard-style)
+  int w = 80;
+  int h = 200;
+  PImage sprite = createImage(w, h, ARGB);
+  sprite.loadPixels();
+
+  int centerX = w / 2;
+
+  // Draw trunk
+  for (int y = h/3; y < h; y++) {
+    for (int x = centerX - 8; x < centerX + 8; x++) {
+      if (x >= 0 && x < w) {
+        float n = noise(x * 0.2, y * 0.1);
+        int r = int(120 + n * 50);
+        int g = int(90 + n * 30);
+        int b = int(50 + n * 20);
+        sprite.pixels[y * w + x] = color(r, g, b, 255);
+      }
+    }
+  }
+
+  // Draw palm fronds radiating from top
+  int frondCount = 8;
+  for (int i = 0; i < frondCount; i++) {
+    float angle = (TWO_PI / frondCount) * i;
+    int frondLength = 60;
+    for (int d = 0; d < frondLength; d++) {
+      int fx = centerX + int(cos(angle) * d);
+      int fy = h/3 - int(sin(angle) * d * 0.3);
+      int width = int(map(d, 0, frondLength, 10, 3));
+      for (int wx = -width; wx <= width; wx++) {
+        int px = fx + wx;
+        int py = fy;
+        if (px >= 0 && px < w && py >= 0 && py < h) {
+          float n = noise(px * 0.1, py * 0.1);
+          int r = int(60 + n * 30);
+          int g = int(140 + n * 40);
+          int b = int(40 + n * 20);
+          sprite.pixels[py * w + px] = color(r, g, b, 255);
+        }
+      }
+    }
+  }
+
+  sprite.updatePixels();
+  return sprite;
+}
+
+PImage createPalmTreeSprite2() {
+  // Variant with slightly different look
+  int w = 75;
+  int h = 190;
+  PImage sprite = createImage(w, h, ARGB);
+  sprite.loadPixels();
+
+  int centerX = w / 2;
+
+  // Slightly thinner trunk
+  for (int y = h/3; y < h; y++) {
+    for (int x = centerX - 6; x < centerX + 6; x++) {
+      if (x >= 0 && x < w) {
+        float n = noise(x * 0.25, y * 0.12);
+        int r = int(100 + n * 40);
+        int g = int(75 + n * 25);
+        int b = int(45 + n * 15);
+        sprite.pixels[y * w + x] = color(r, g, b, 255);
+      }
+    }
+  }
+
+  // Fewer, larger fronds
+  int frondCount = 6;
+  for (int i = 0; i < frondCount; i++) {
+    float angle = (TWO_PI / frondCount) * i;
+    int frondLength = 55;
+    for (int d = 0; d < frondLength; d++) {
+      int fx = centerX + int(cos(angle) * d);
+      int fy = h/3 - int(sin(angle) * d * 0.25);
+      int width = int(map(d, 0, frondLength, 12, 4));
+      for (int wx = -width; wx <= width; wx++) {
+        int px = fx + wx;
+        int py = fy;
+        if (px >= 0 && px < w && py >= 0 && py < h) {
+          float n = noise(px * 0.15, py * 0.15);
+          int r = int(50 + n * 35);
+          int g = int(130 + n * 45);
+          int b = int(35 + n * 25);
+          sprite.pixels[py * w + px] = color(r, g, b, 255);
+        }
+      }
+    }
+  }
+
+  sprite.updatePixels();
+  return sprite;
+}
+
+PImage createBeachUmbrellaSprite() {
+  // Beach umbrella sprite
+  int w = 90;
+  int h = 120;
+  PImage sprite = createImage(w, h, ARGB);
+  sprite.loadPixels();
+
+  int centerX = w / 2;
+
+  // Draw pole
+  for (int y = h/2; y < h; y++) {
+    for (int x = centerX - 2; x < centerX + 2; x++) {
+      if (x >= 0 && x < w) {
+        sprite.pixels[y * w + x] = color(230, 230, 220, 255);
+      }
+    }
+  }
+
+  // Draw umbrella canopy (semicircle with stripes)
+  int canopyRadius = 40;
+  int canopyTop = h/2 - 20;
+  for (int y = canopyTop; y < canopyTop + canopyRadius; y++) {
+    for (int x = 0; x < w; x++) {
+      float dx = x - centerX;
+      float dy = y - canopyTop;
+      float d = sqrt(dx*dx + dy*dy);
+      if (d < canopyRadius && dy >= 0) {
+        // Create striped pattern
+        boolean stripe = (int(atan2(dy, dx) * 3 / PI) % 2) == 0;
+        if (stripe) {
+          sprite.pixels[y * w + x] = color(200, 80, 120, 255);
+        } else {
+          sprite.pixels[y * w + x] = color(140, 60, 90, 255);
+        }
+      }
+    }
+  }
+
+  sprite.updatePixels();
+  return sprite;
+}
+
+PImage createSailboatSprite() {
+  // Distant sailboat silhouette
+  int w = 150;
+  int h = 180;
+  PImage sprite = createImage(w, h, ARGB);
+  sprite.loadPixels();
+
+  int centerX = w / 2;
+
+  // Draw hull (boat body)
+  for (int y = h - 30; y < h; y++) {
+    int hullWidth = int(map(y, h - 30, h, 50, 70));
+    for (int x = centerX - hullWidth/2; x < centerX + hullWidth/2; x++) {
+      if (x >= 0 && x < w) {
+        sprite.pixels[y * w + x] = color(180, 160, 140, 255);
+      }
+    }
+  }
+
+  // Draw mast (vertical pole)
+  for (int y = 20; y < h - 30; y++) {
+    for (int x = centerX - 3; x < centerX + 3; x++) {
+      if (x >= 0 && x < w) {
+        sprite.pixels[y * w + x] = color(120, 100, 80, 255);
+      }
+    }
+  }
+
+  // Draw sail (triangle)
+  for (int y = 20; y < h - 40; y++) {
+    int sailWidth = int(map(y, 20, h - 40, 5, 50));
+    for (int x = centerX; x < centerX + sailWidth; x++) {
+      if (x >= 0 && x < w) {
+        sprite.pixels[y * w + x] = color(240, 240, 230, 255);
+      }
+    }
+  }
+
+  sprite.updatePixels();
+  return sprite;
+}
+
 // Blood effect spawning functions
 void spawnBloodSpray(float x, float y, float bulletAngle, int count) {
   for (int i = 0; i < count; i++) {
@@ -2006,7 +2237,7 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   
   for (int i = 0; i < numRays; i++) {
     RayHit hit = castRay(p.x, p.y, rayAngle);
-    if (hit != null) {
+    if (hit != null && hit.wallType != 9) { // Skip rendering invisible barriers (tile 9)
       float distance = hit.distance * cos(rayAngle - p.angle);
       float wallHeight = (tileSize * h) / distance;
       PImage tex = wallTextures[hit.wallType];
@@ -2032,7 +2263,16 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   for (BloodPool pool : bloodPools) {
     drawBloodPool(p, pool, w, h);
   }
-  
+
+  // Draw beach obstacles (sprites)
+  if (currentMapIndex == 2) {
+    for (BeachObstacle obs : beachObstacles) {
+      drawBeachObstacle(p, obs, w, h);
+    }
+    // Draw sailboat on horizon
+    drawSailboat(p, w, h);
+  }
+
   Player other = (p == player1) ? player2 : player1;
   drawOtherPlayer(p, other, w, h);
   
@@ -2119,6 +2359,9 @@ void drawFloorWithTextures(Player p, int w, int h) {
           tex = creekTexture;
         } else if (tileType == 7 && shorelineTexture != null) {
           // Shoreline tile - use shoreline texture
+          tex = shorelineTexture;
+        } else if (tileType == 9 && currentMapIndex == 2) {
+          // Beach map - ocean/invisible barrier shows as ocean water
           tex = shorelineTexture;
         } else if (tileType == 0 && floorTexture != null) {
           // Empty floor tile - use regular floor texture
@@ -2561,6 +2804,75 @@ void drawBloodOverlay(Player p, int w, int h) {
   }
 }
 
+void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
+  float dx = obs.x - viewer.x;
+  float dy = obs.y - viewer.y;
+  float distance = sqrt(dx*dx + dy*dy);
+  float angle = atan2(dy, dx);
+  float angleDiff = angle - viewer.angle;
+  while (angleDiff > PI) angleDiff -= TWO_PI;
+  while (angleDiff < -PI) angleDiff += TWO_PI;
+
+  if (abs(angleDiff) < fov/2 + 0.5 && distance < maxDepth && distance > 10) {
+    RayHit hit = castRay(viewer.x, viewer.y, angle);
+    if (hit == null || hit.distance > distance) {
+      float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
+      float spriteHeight = (obs.sprite.height * h) / (distance * 0.5); // Scale based on distance
+      float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
+
+      float brightness = map(distance, 0, maxDepth, 1, 0.3);
+      brightness = constrain(brightness, 0.3, 1);
+
+      pushMatrix();
+      translate(screenX, h/2);
+      tint(255 * brightness);
+      imageMode(CENTER);
+      image(obs.sprite, 0, 0, spriteWidth, spriteHeight);
+      noTint();
+      imageMode(CORNER);
+      popMatrix();
+    }
+  }
+}
+
+void drawSailboat(Player viewer, int w, int h) {
+  // Position sailboat far off on the horizon, left of center
+  float boatWorldX = mapSizeBeach * tileSize * 0.7; // Right side of map
+  float boatWorldY = mapSizeBeach * tileSize * 0.4; // Slightly left of center vertically
+
+  float dx = boatWorldX - viewer.x;
+  float dy = boatWorldY - viewer.y;
+  float distance = sqrt(dx*dx + dy*dy);
+  float angle = atan2(dy, dx);
+  float angleDiff = angle - viewer.angle;
+  while (angleDiff > PI) angleDiff -= TWO_PI;
+  while (angleDiff < -PI) angleDiff += TWO_PI;
+
+  if (abs(angleDiff) < fov/2 + 0.2) {
+    float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
+
+    // Make sailboat appear distant and small
+    float spriteHeight = (sailboatSprite.height * h) / (distance * 1.5);
+    float spriteWidth = (sailboatSprite.width * spriteHeight) / sailboatSprite.height;
+
+    // Position near horizon
+    float horizonY = h / 2 - h * 0.15;
+
+    // Fade based on distance
+    float brightness = 0.6; // Faded for distance effect
+    float alpha = constrain(map(distance, 800, 1500, 255, 100), 100, 255);
+
+    pushMatrix();
+    translate(screenX, horizonY);
+    tint(255 * brightness, alpha);
+    imageMode(CENTER);
+    image(sailboatSprite, 0, 0, spriteWidth, spriteHeight);
+    noTint();
+    imageMode(CORNER);
+    popMatrix();
+  }
+}
+
 RayHit castRay(float x, float y, float angle) {
   float rayDirX = cos(angle);
   float rayDirY = sin(angle);
@@ -2620,17 +2932,28 @@ boolean checkCollision(float x, float y) {
 boolean checkCollisionWithRadius(float x, float y, float radius) {
   int gridX = int(x / tileSize);
   int gridY = int(y / tileSize);
-  if (gridX < 0 || gridX >= mapSize || gridY < 0 || gridY >= mapSize) return true;
+  int currentSize = (currentMapIndex == 2) ? mapSizeBeach : mapSize;
+  if (gridX < 0 || gridX >= currentSize || gridY < 0 || gridY >= currentSize) return true;
   int tile = map[gridY][gridX];
-  if (tile != 0 && tile != 5 && tile != 7) return true; // Creek (5) is passable
+  if (tile != 0 && tile != 5 && tile != 7) return true; // Creek (5) and shoreline (7) are passable
   float[][] testPoints = {{x + radius, y}, {x - radius, y}, {x, y + radius}, {x, y - radius}};
   for (float[] point : testPoints) {
     int gx = int(point[0] / tileSize);
     int gy = int(point[1] / tileSize);
-    if (gx < 0 || gx >= mapSize || gy < 0 || gy >= mapSize) return true;
+    if (gx < 0 || gx >= currentSize || gy < 0 || gy >= currentSize) return true;
     int t = map[gy][gx];
-    if (t != 0 && t != 5) return true; // Creek (5) is passable
+    if (t != 0 && t != 5 && t != 7) return true; // Creek (5) and shoreline (7) are passable
   }
+
+  // Check beach obstacle collisions
+  if (currentMapIndex == 2) {
+    for (BeachObstacle obs : beachObstacles) {
+      if (obs.collidesWith(x, y, radius)) {
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
@@ -3063,9 +3386,31 @@ class BloodPool {
 
 class HealthKit {
   float x, y;
-  
+
   HealthKit(float x, float y) {
     this.x = x;
     this.y = y;
+  }
+}
+
+class BeachObstacle {
+  float x, y;
+  float radius; // Collision radius
+  PImage sprite;
+  String type; // "palm1", "palm2", "umbrella"
+
+  BeachObstacle(float x, float y, float radius, PImage sprite, String type) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.sprite = sprite;
+    this.type = type;
+  }
+
+  boolean collidesWith(float px, float py, float playerRadius) {
+    float dx = px - this.x;
+    float dy = py - this.y;
+    float distance = sqrt(dx*dx + dy*dy);
+    return distance < (this.radius + playerRadius);
   }
 }
