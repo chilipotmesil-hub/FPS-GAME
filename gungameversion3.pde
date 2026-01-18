@@ -2275,9 +2275,6 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   pushMatrix();
   translate(startX, startY);
 
-  // Clip rendering to this player's viewport to prevent bleed into other player's screen
-  clip(0, 0, w, h);
-
   // Draw skybox
   if (skyboxTexture != null) {
     drawSkybox(p, w, h);
@@ -2399,6 +2396,11 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     spritesToRender.add(new SpriteDepth(distance, "bullet", b));
   }
 
+  // Add sailboat (beach map only) - use very large distance so it renders behind everything
+  if (currentMapIndex == 2) {
+    spritesToRender.add(new SpriteDepth(maxDepth * 10, "sailboat", p));
+  }
+
   // Sort sprites by distance (farthest first) and render
   Collections.sort(spritesToRender);
 
@@ -2432,19 +2434,13 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
           ellipse(screenX, h/2, size, size);
         }
       }
+    } else if (sd.type.equals("sailboat")) {
+      drawSailboat((Player)sd.data, w, h);
     }
-  }
-
-  // Draw sailboat on horizon (always in background, doesn't need depth sorting)
-  if (currentMapIndex == 2) {
-    drawSailboat(p, w, h);
   }
   
   drawBloodOverlay(p, w, h);
   drawHUD(p, w, h);
-
-  // Remove clipping before restoring matrix
-  noClip();
   popMatrix();
 }
 
@@ -2957,8 +2953,8 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
       float spriteHeight = (obs.sprite.height * h) / distance;
       float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
 
-      // Position sprite at eye level, then move up by half sprite height
-      float screenY = h/2 - (spriteHeight / 2);
+      // Position sprite at eye level, then move up by quarter sprite height
+      float screenY = h/2 - (spriteHeight / 4);
 
       float brightness = map(distance, 0, maxDepth, 1, 0.3);
       brightness = constrain(brightness, 0.3, 1);
