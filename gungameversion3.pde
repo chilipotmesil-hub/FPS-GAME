@@ -54,7 +54,7 @@ int numMaps = 3;
 
 // Map
 int mapSize = 16;
-int mapSizeBeach = 24; // Beach map is larger
+int mapSizeBeach = 32; // Beach map is larger
 int tileSize = 50;
 int[][] currentMap;
 
@@ -104,30 +104,38 @@ int[][] mapForestClearing = {
 // 9=invisible shoreline barrier
 // Beach map uses sprite-based obstacles instead of wall tiles
 int[][] mapSunsetBeach = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-  {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9}
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9}
 };
 
 // Reference to active map (will point to one of the above)
@@ -233,6 +241,17 @@ void selectMap(int mapIndex) {
     wallTextures = wallTexturesClassic;
     floorTexture = floorTextureClassic;
     skyboxTexture = skyboxTextureClassic;
+    // Reset player positions for standard maps
+    if (player1 != null) {
+      player1.x = 75;
+      player1.y = 75;
+      player1.angle = 0;
+    }
+    if (player2 != null) {
+      player2.x = 725;
+      player2.y = 725;
+      player2.angle = PI;
+    }
   } else if (mapIndex == 1) {
     // Forest Clearing
     map = mapForestClearing;
@@ -240,6 +259,17 @@ void selectMap(int mapIndex) {
     wallTextures = wallTexturesForest;
     floorTexture = floorTextureForest;
     skyboxTexture = skyboxTextureForest;
+    // Reset player positions for standard maps
+    if (player1 != null) {
+      player1.x = 75;
+      player1.y = 75;
+      player1.angle = 0;
+    }
+    if (player2 != null) {
+      player2.x = 725;
+      player2.y = 725;
+      player2.angle = PI;
+    }
   } else if (mapIndex == 2) {
     // Sunset Beach
     map = mapSunsetBeach;
@@ -248,28 +278,33 @@ void selectMap(int mapIndex) {
     floorTexture = floorTextureBeach;
     skyboxTexture = skyboxTextureBeach;
     initializeBeachObstacles();
+    // Reset player positions for larger beach map
+    if (player1 != null) {
+      player1.x = 150;
+      player1.y = 150;
+      player1.angle = PI/4;
+    }
+    if (player2 != null) {
+      player2.x = 550;
+      player2.y = 1300;
+      player2.angle = -3*PI/4;
+    }
   }
 }
 
 void initializeBeachObstacles() {
   beachObstacles.clear();
 
-  // Add palm trees scattered across the beach
-  beachObstacles.add(new BeachObstacle(150, 150, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(250, 300, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(180, 450, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(350, 200, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(300, 550, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(420, 380, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(150, 700, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(280, 900, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(400, 750, 20, palmTreeSprite, "palm1"));
+  // Add palm trees - well spaced across the larger beach area
+  beachObstacles.add(new BeachObstacle(200, 250, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(450, 450, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(300, 700, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(550, 900, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(200, 1200, 20, palmTreeSprite, "palm1"));
 
-  // Add beach umbrellas
-  beachObstacles.add(new BeachObstacle(200, 600, 15, beachUmbrellaSprite, "umbrella"));
-  beachObstacles.add(new BeachObstacle(350, 500, 15, beachUmbrellaSprite, "umbrella"));
-  beachObstacles.add(new BeachObstacle(280, 220, 15, beachUmbrellaSprite, "umbrella"));
-  beachObstacles.add(new BeachObstacle(450, 650, 15, beachUmbrellaSprite, "umbrella"));
+  // Add beach umbrellas - fewer, well spaced
+  beachObstacles.add(new BeachObstacle(400, 600, 15, beachUmbrellaSprite, "umbrella"));
+  beachObstacles.add(new BeachObstacle(350, 1000, 15, beachUmbrellaSprite, "umbrella"));
 }
 
 void draw() {
@@ -1922,9 +1957,9 @@ PImage createSunsetSkyboxTexture() {
 }
 
 PImage createPalmTreeSprite() {
-  // Create a tall palm tree sprite (flat, billboard-style)
-  int w = 175;
-  int h = 225;
+  // Create a palm tree sprite (flat, billboard-style) - slightly taller than player
+  int w = 50;
+  int h = 60;
   PImage sprite = createImage(w, h, ARGB);
   sprite.loadPixels();
 
@@ -1932,7 +1967,7 @@ PImage createPalmTreeSprite() {
 
   // Draw trunk
   for (int y = h/3; y < h; y++) {
-    for (int x = centerX - 15; x < centerX + 15; x++) {
+    for (int x = centerX - 3; x < centerX + 3; x++) {
       if (x >= 0 && x < w) {
         float n = noise(x * 0.2, y * 0.1);
         int r = int(120 + n * 50);
@@ -1944,14 +1979,14 @@ PImage createPalmTreeSprite() {
   }
 
   // Draw palm fronds radiating from top
-  int frondCount = 8;
+  int frondCount = 6;
   for (int i = 0; i < frondCount; i++) {
     float angle = (TWO_PI / frondCount) * i;
-    int frondLength = 80;
+    int frondLength = 20;
     for (int d = 0; d < frondLength; d++) {
       int fx = centerX + int(cos(angle) * d);
-      int fy = h/3 - int(sin(angle) * d * 0.3);
-      int width = int(map(d, 0, frondLength, 15, 5));
+      int fy = h/3 - int(sin(angle) * d * 0.2);
+      int width = int(map(d, 0, frondLength, 4, 1));
       for (int wx = -width; wx <= width; wx++) {
         int px = fx + wx;
         int py = fy;
@@ -1971,9 +2006,9 @@ PImage createPalmTreeSprite() {
 }
 
 PImage createPalmTreeSprite2() {
-  // Variant with slightly different look
-  int w = 150;
-  int h = 200;
+  // Variant with slightly different look - slightly taller than player
+  int w = 45;
+  int h = 55;
   PImage sprite = createImage(w, h, ARGB);
   sprite.loadPixels();
 
@@ -1981,7 +2016,7 @@ PImage createPalmTreeSprite2() {
 
   // Slightly thinner trunk
   for (int y = h/3; y < h; y++) {
-    for (int x = centerX - 12; x < centerX + 12; x++) {
+    for (int x = centerX - 2; x < centerX + 2; x++) {
       if (x >= 0 && x < w) {
         float n = noise(x * 0.25, y * 0.12);
         int r = int(100 + n * 40);
@@ -1993,14 +2028,14 @@ PImage createPalmTreeSprite2() {
   }
 
   // Fewer, larger fronds
-  int frondCount = 6;
+  int frondCount = 5;
   for (int i = 0; i < frondCount; i++) {
     float angle = (TWO_PI / frondCount) * i;
-    int frondLength = 70;
+    int frondLength = 18;
     for (int d = 0; d < frondLength; d++) {
       int fx = centerX + int(cos(angle) * d);
-      int fy = h/3 - int(sin(angle) * d * 0.25);
-      int width = int(map(d, 0, frondLength, 18, 6));
+      int fy = h/3 - int(sin(angle) * d * 0.2);
+      int width = int(map(d, 0, frondLength, 4, 1));
       for (int wx = -width; wx <= width; wx++) {
         int px = fx + wx;
         int py = fy;
@@ -2020,9 +2055,9 @@ PImage createPalmTreeSprite2() {
 }
 
 PImage createBeachUmbrellaSprite() {
-  // Beach umbrella sprite
-  int w = 90;
-  int h = 120;
+  // Beach umbrella sprite - similar height to player
+  int w = 40;
+  int h = 45;
   PImage sprite = createImage(w, h, ARGB);
   sprite.loadPixels();
 
@@ -2030,7 +2065,7 @@ PImage createBeachUmbrellaSprite() {
 
   // Draw pole
   for (int y = h/2; y < h; y++) {
-    for (int x = centerX - 2; x < centerX + 2; x++) {
+    for (int x = centerX - 1; x < centerX + 1; x++) {
       if (x >= 0 && x < w) {
         sprite.pixels[y * w + x] = color(230, 230, 220, 255);
       }
@@ -2038,8 +2073,8 @@ PImage createBeachUmbrellaSprite() {
   }
 
   // Draw umbrella canopy (semicircle with stripes)
-  int canopyRadius = 40;
-  int canopyTop = h/2 - 20;
+  int canopyRadius = 18;
+  int canopyTop = h/2 - 8;
   for (int y = canopyTop; y < canopyTop + canopyRadius; y++) {
     for (int x = 0; x < w; x++) {
       float dx = x - centerX;
@@ -2817,14 +2852,19 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
     RayHit hit = castRay(viewer.x, viewer.y, angle);
     if (hit == null || hit.distance > distance) {
       float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
-      float spriteHeight = (obs.sprite.height * h) / (distance * 0.5); // Scale based on distance
+
+      // Scale sprite based on distance - same scaling as player sprites
+      float spriteHeight = (obs.sprite.height * h) / distance;
       float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
+
+      // Position sprite on ground (bottom of sprite at ground level)
+      float screenY = h/2 + (spriteHeight / 2);
 
       float brightness = map(distance, 0, maxDepth, 1, 0.3);
       brightness = constrain(brightness, 0.3, 1);
 
       pushMatrix();
-      translate(screenX, h/2);
+      translate(screenX, screenY);
       tint(255 * brightness);
       imageMode(CENTER);
       image(obs.sprite, 0, 0, spriteWidth, spriteHeight);
@@ -2836,31 +2876,27 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
 }
 
 void drawSailboat(Player viewer, int w, int h) {
-  // Position sailboat far off on the horizon, left of center
-  float boatWorldX = mapSizeBeach * tileSize * 0.7; // Right side of map
-  float boatWorldY = mapSizeBeach * tileSize * 0.4; // Slightly left of center vertically
+  // Sailboat appears at a fixed direction on the horizon (east-northeast)
+  // This makes it static relative to player rotation, not position
+  float sailboatDirection = PI * 0.25; // 45 degrees (northeast direction)
 
-  float dx = boatWorldX - viewer.x;
-  float dy = boatWorldY - viewer.y;
-  float distance = sqrt(dx*dx + dy*dy);
-  float angle = atan2(dy, dx);
-  float angleDiff = angle - viewer.angle;
+  float angleDiff = sailboatDirection - viewer.angle;
   while (angleDiff > PI) angleDiff -= TWO_PI;
   while (angleDiff < -PI) angleDiff += TWO_PI;
 
-  if (abs(angleDiff) < fov/2 + 0.2) {
+  if (abs(angleDiff) < fov/2 + 0.3) {
     float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
 
-    // Make sailboat appear distant and small
-    float spriteHeight = (sailboatSprite.height * h) / (distance * 1.5);
+    // Small sailboat on distant horizon
+    float spriteHeight = h * 0.08; // Fixed small size (8% of screen height)
     float spriteWidth = (sailboatSprite.width * spriteHeight) / sailboatSprite.height;
 
-    // Position near horizon
-    float horizonY = h / 2 - h * 0.15;
+    // Position near horizon line
+    float horizonY = h / 2 - h * 0.12;
 
-    // Fade based on distance
-    float brightness = 0.6; // Faded for distance effect
-    float alpha = constrain(map(distance, 800, 1500, 255, 100), 100, 255);
+    // Faded atmospheric appearance
+    float brightness = 0.7;
+    float alpha = 180;
 
     pushMatrix();
     translate(screenX, horizonY);
