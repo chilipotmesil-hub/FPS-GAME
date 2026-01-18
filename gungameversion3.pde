@@ -5,6 +5,7 @@
 
 import processing.serial.*;
 import processing.sound.*;
+import java.util.Collections;
 
 // Serial ports for Arduino (uncomment when ready)
 // Serial port1;
@@ -2274,6 +2275,9 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   pushMatrix();
   translate(startX, startY);
 
+  // Clip rendering to this player's viewport to prevent bleed into other player's screen
+  clip(0, 0, w, h);
+
   // Draw skybox
   if (skyboxTexture != null) {
     drawSkybox(p, w, h);
@@ -2337,60 +2341,110 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     rayAngle += rayStep;
   }
   
-  // Draw blood pools
+  // Draw blood pools (on ground, always behind sprites)
   for (BloodPool pool : bloodPools) {
     drawBloodPool(p, pool, w, h);
   }
 
-  // Draw beach obstacles (sprites)
+  // Collect all sprites with distances for depth sorting
+  ArrayList<SpriteDepth> spritesToRender = new ArrayList<SpriteDepth>();
+
+  // Add beach obstacles
   if (currentMapIndex == 2) {
     for (BeachObstacle obs : beachObstacles) {
-      drawBeachObstacle(p, obs, w, h);
+      float dx = obs.x - p.x;
+      float dy = obs.y - p.y;
+      float distance = sqrt(dx*dx + dy*dy);
+      spritesToRender.add(new SpriteDepth(distance, "obstacle", obs));
     }
-    // Draw sailboat on horizon
-    drawSailboat(p, w, h);
   }
 
+  // Add other player
   Player other = (p == player1) ? player2 : player1;
-  drawOtherPlayer(p, other, w, h);
-  
+  float otherDx = other.x - p.x;
+  float otherDy = other.y - p.y;
+  float otherDistance = sqrt(otherDx*otherDx + otherDy*otherDy);
+  spritesToRender.add(new SpriteDepth(otherDistance, "player", other));
+
+  // Add weapon pickups
   for (WeaponPickup wp : weaponPickups) {
-    drawWeaponPickup(p, wp, w, h);
+    float dx = wp.x - p.x;
+    float dy = wp.y - p.y;
+    float distance = sqrt(dx*dx + dy*dy);
+    spritesToRender.add(new SpriteDepth(distance, "weapon", wp));
   }
-  
-  // Draw health kits
+
+  // Add health kits
   for (HealthKit hk : healthKits) {
-    drawHealthKit(p, hk, w, h);
+    float dx = hk.x - p.x;
+    float dy = hk.y - p.y;
+    float distance = sqrt(dx*dx + dy*dy);
+    spritesToRender.add(new SpriteDepth(distance, "health", hk));
   }
-  
-  // Draw blood particles
+
+  // Add blood particles
   for (BloodParticle bp : bloodParticles) {
-    drawBloodParticle(p, bp, w, h);
+    float dx = bp.x - p.x;
+    float dy = bp.y - p.y;
+    float distance = sqrt(dx*dx + dy*dy);
+    spritesToRender.add(new SpriteDepth(distance, "blood", bp));
   }
-  
+
+  // Add bullets (only owner's bullets)
   for (Bullet b : bullets) {
     if (b.owner != p) continue;
     float dx = b.x - p.x;
     float dy = b.y - p.y;
     float distance = sqrt(dx*dx + dy*dy);
-    float angle = atan2(dy, dx);
-    float angleDiff = angle - p.angle;
-    while (angleDiff > PI) angleDiff -= TWO_PI;
-    while (angleDiff < -PI) angleDiff += TWO_PI;
-    if (abs(angleDiff) < fov/2 + 0.5 && distance < maxDepth) {
-      RayHit hit = castRay(p.x, p.y, angle);
-      if (hit == null || hit.distance > distance) {
-        float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
-        float size = map(distance, 0, 300, 8, 2);
-        fill(255, 255, 0, 200);
-        noStroke();
-        ellipse(screenX, h/2, size, size);
+    spritesToRender.add(new SpriteDepth(distance, "bullet", b));
+  }
+
+  // Sort sprites by distance (farthest first) and render
+  Collections.sort(spritesToRender);
+
+  for (SpriteDepth sd : spritesToRender) {
+    if (sd.type.equals("obstacle")) {
+      drawBeachObstacle(p, (BeachObstacle)sd.data, w, h);
+    } else if (sd.type.equals("player")) {
+      drawOtherPlayer(p, (Player)sd.data, w, h);
+    } else if (sd.type.equals("weapon")) {
+      drawWeaponPickup(p, (WeaponPickup)sd.data, w, h);
+    } else if (sd.type.equals("health")) {
+      drawHealthKit(p, (HealthKit)sd.data, w, h);
+    } else if (sd.type.equals("blood")) {
+      drawBloodParticle(p, (BloodParticle)sd.data, w, h);
+    } else if (sd.type.equals("bullet")) {
+      Bullet b = (Bullet)sd.data;
+      float dx = b.x - p.x;
+      float dy = b.y - p.y;
+      float distance = sqrt(dx*dx + dy*dy);
+      float angle = atan2(dy, dx);
+      float angleDiff = angle - p.angle;
+      while (angleDiff > PI) angleDiff -= TWO_PI;
+      while (angleDiff < -PI) angleDiff += TWO_PI;
+      if (abs(angleDiff) < fov/2 + 0.5 && distance < maxDepth) {
+        RayHit hit = castRay(p.x, p.y, angle);
+        if (hit == null || hit.distance > distance) {
+          float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
+          float size = map(distance, 0, 300, 8, 2);
+          fill(255, 255, 0, 200);
+          noStroke();
+          ellipse(screenX, h/2, size, size);
+        }
       }
     }
+  }
+
+  // Draw sailboat on horizon (always in background, doesn't need depth sorting)
+  if (currentMapIndex == 2) {
+    drawSailboat(p, w, h);
   }
   
   drawBloodOverlay(p, w, h);
   drawHUD(p, w, h);
+
+  // Remove clipping before restoring matrix
+  noClip();
   popMatrix();
 }
 
@@ -2903,8 +2957,8 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
       float spriteHeight = (obs.sprite.height * h) / distance;
       float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
 
-      // Position sprite at eye level (centered on horizon/crosshair at h/2)
-      float screenY = h/2;
+      // Position sprite at eye level, then move up by half sprite height
+      float screenY = h/2 - (spriteHeight / 2);
 
       float brightness = map(distance, 0, maxDepth, 1, 0.3);
       brightness = constrain(brightness, 0.3, 1);
@@ -2937,8 +2991,8 @@ void drawSailboat(Player viewer, int w, int h) {
     float spriteHeight = h * 0.08; // Fixed small size (8% of screen height)
     float spriteWidth = (sailboatSprite.width * spriteHeight) / sailboatSprite.height;
 
-    // Position sailboat sitting ON the horizon line (bottom of sprite at h/2)
-    float horizonY = h / 2 + spriteHeight / 2;
+    // Position sailboat above the horizon line (moved up by 1 sprite height)
+    float horizonY = h / 2 - spriteHeight / 2;
 
     // Faded atmospheric appearance
     float brightness = 0.7;
@@ -3520,5 +3574,23 @@ class BeachObstacle {
     float dy = py - this.y;
     float distance = sqrt(dx*dx + dy*dy);
     return distance < (this.radius + playerRadius);
+  }
+}
+
+// Helper class for depth-sorted sprite rendering
+class SpriteDepth implements Comparable<SpriteDepth> {
+  float distance;
+  String type; // "obstacle", "player", "weapon", "health", "blood", "bullet"
+  Object data; // Store the actual object to render
+
+  SpriteDepth(float distance, String type, Object data) {
+    this.distance = distance;
+    this.type = type;
+    this.data = data;
+  }
+
+  int compareTo(SpriteDepth other) {
+    // Sort by distance descending (farthest first)
+    return Float.compare(other.distance, this.distance);
   }
 }
