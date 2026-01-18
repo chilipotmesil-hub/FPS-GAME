@@ -1923,8 +1923,8 @@ PImage createSunsetSkyboxTexture() {
 
 PImage createPalmTreeSprite() {
   // Create a tall palm tree sprite (flat, billboard-style)
-  int w = 80;
-  int h = 200;
+  int w = 175;
+  int h = 225;
   PImage sprite = createImage(w, h, ARGB);
   sprite.loadPixels();
 
@@ -1932,7 +1932,7 @@ PImage createPalmTreeSprite() {
 
   // Draw trunk
   for (int y = h/3; y < h; y++) {
-    for (int x = centerX - 8; x < centerX + 8; x++) {
+    for (int x = centerX - 15; x < centerX + 15; x++) {
       if (x >= 0 && x < w) {
         float n = noise(x * 0.2, y * 0.1);
         int r = int(120 + n * 50);
@@ -1947,11 +1947,11 @@ PImage createPalmTreeSprite() {
   int frondCount = 8;
   for (int i = 0; i < frondCount; i++) {
     float angle = (TWO_PI / frondCount) * i;
-    int frondLength = 60;
+    int frondLength = 80;
     for (int d = 0; d < frondLength; d++) {
       int fx = centerX + int(cos(angle) * d);
       int fy = h/3 - int(sin(angle) * d * 0.3);
-      int width = int(map(d, 0, frondLength, 10, 3));
+      int width = int(map(d, 0, frondLength, 15, 5));
       for (int wx = -width; wx <= width; wx++) {
         int px = fx + wx;
         int py = fy;
@@ -1972,8 +1972,8 @@ PImage createPalmTreeSprite() {
 
 PImage createPalmTreeSprite2() {
   // Variant with slightly different look
-  int w = 75;
-  int h = 190;
+  int w = 150;
+  int h = 200;
   PImage sprite = createImage(w, h, ARGB);
   sprite.loadPixels();
 
@@ -1981,7 +1981,7 @@ PImage createPalmTreeSprite2() {
 
   // Slightly thinner trunk
   for (int y = h/3; y < h; y++) {
-    for (int x = centerX - 6; x < centerX + 6; x++) {
+    for (int x = centerX - 12; x < centerX + 12; x++) {
       if (x >= 0 && x < w) {
         float n = noise(x * 0.25, y * 0.12);
         int r = int(100 + n * 40);
@@ -1996,11 +1996,11 @@ PImage createPalmTreeSprite2() {
   int frondCount = 6;
   for (int i = 0; i < frondCount; i++) {
     float angle = (TWO_PI / frondCount) * i;
-    int frondLength = 55;
+    int frondLength = 70;
     for (int d = 0; d < frondLength; d++) {
       int fx = centerX + int(cos(angle) * d);
       int fy = h/3 - int(sin(angle) * d * 0.25);
-      int width = int(map(d, 0, frondLength, 12, 4));
+      int width = int(map(d, 0, frondLength, 18, 6));
       for (int wx = -width; wx <= width; wx++) {
         int px = fx + wx;
         int py = fy;
