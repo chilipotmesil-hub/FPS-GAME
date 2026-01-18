@@ -2273,7 +2273,7 @@ void drawSkybox(Player p, int w, int h) {
 void renderPlayer(Player p, int startX, int startY, int w, int h) {
   pushMatrix();
   translate(startX, startY);
-  
+
   // Draw skybox
   if (skyboxTexture != null) {
     drawSkybox(p, w, h);
@@ -2281,7 +2281,14 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     fill(100, 120, 150);
     rect(0, 0, w, h/2);
   }
-  
+
+  // Fill bottom half with base color (ocean for beach, will be covered by floor textures)
+  if (currentMapIndex == 2) {
+    fill(30, 120, 180); // Ocean blue for beach map
+    noStroke();
+    rect(0, h/2, w, h/2);
+  }
+
   // Draw floor with textures
   drawFloorWithTextures(p, w, h);
   
@@ -2462,9 +2469,12 @@ void drawFloorWithTextures(Player p, int w, int h) {
         noStroke();
         rect(x, y, sliceWidth, stepSize);
       } else {
-        // Out of bounds - draw solid color
+        // Out of bounds - draw solid color based on map theme
         if (currentMapIndex == 0) {
           fill(60 * 0.5, 50 * 0.5, 40 * 0.5); // Warehouse concrete (darkened)
+        } else if (currentMapIndex == 2) {
+          // Beach map - extend ocean infinitely in all directions
+          fill(30 * 0.5, 120 * 0.5, 180 * 0.5); // Ocean blue (darkened)
         } else {
           fill(45 * 0.5, 65 * 0.5, 35 * 0.5); // Forest grass (darkened)
         }
@@ -2893,8 +2903,8 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
       float spriteHeight = (obs.sprite.height * h) / distance;
       float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
 
-      // Position sprite on ground (bottom of sprite at ground level)
-      float screenY = h/2 + (spriteHeight / 2);
+      // Position sprite at eye level (centered on horizon/crosshair at h/2)
+      float screenY = h/2;
 
       float brightness = map(distance, 0, maxDepth, 1, 0.3);
       brightness = constrain(brightness, 0.3, 1);
@@ -2912,9 +2922,9 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
 }
 
 void drawSailboat(Player viewer, int w, int h) {
-  // Sailboat appears at a fixed direction on the horizon (east-northeast)
-  // This makes it static relative to player rotation, not position
-  float sailboatDirection = PI * 0.25; // 45 degrees (northeast direction)
+  // Sailboat appears when looking toward the ocean (south direction)
+  // Ocean is at bottom of map (high Y), so south is PI/2
+  float sailboatDirection = PI / 2; // 90 degrees (south, toward ocean)
 
   float angleDiff = sailboatDirection - viewer.angle;
   while (angleDiff > PI) angleDiff -= TWO_PI;
@@ -2927,8 +2937,8 @@ void drawSailboat(Player viewer, int w, int h) {
     float spriteHeight = h * 0.08; // Fixed small size (8% of screen height)
     float spriteWidth = (sailboatSprite.width * spriteHeight) / sailboatSprite.height;
 
-    // Position near horizon line
-    float horizonY = h / 2 - h * 0.12;
+    // Position sailboat sitting ON the horizon line (bottom of sprite at h/2)
+    float horizonY = h / 2 + spriteHeight / 2;
 
     // Faded atmospheric appearance
     float brightness = 0.7;
@@ -3392,6 +3402,18 @@ class Bullet {
     traveled += speed;
     if (checkCollision(x, y)) {
       dead = true;
+    }
+    // Check collision with beach obstacles
+    if (currentMapIndex == 2) {
+      for (BeachObstacle obs : beachObstacles) {
+        float dx = x - obs.x;
+        float dy = y - obs.y;
+        float distance = sqrt(dx*dx + dy*dy);
+        if (distance < obs.radius) {
+          dead = true;
+          break;
+        }
+      }
     }
     if (traveled > maxDist) dead = true;
   }
