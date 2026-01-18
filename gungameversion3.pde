@@ -1608,13 +1608,8 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     rect(0, 0, w, h/2);
   }
   
-  // Draw floor (different color based on map)
-  if (currentMapIndex == 0) {
-    fill(60, 50, 40); // Warehouse concrete
-  } else {
-    fill(45, 65, 35); // Forest grass
-  }
-  rect(0, h/2, w, h/2);
+  // Draw floor with textures
+  drawFloorWithTextures(p, w, h);
   
   float rayAngle = p.angle - fov/2;
   float rayStep = fov / numRays;
@@ -1624,6 +1619,14 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
     if (hit != null) {
       float distance = hit.distance * cos(rayAngle - p.angle);
       float wallHeight = (tileSize * h) / distance;
+
+      // Make pine trees (tiles 2 and 3) tower over the arena
+      boolean isPineTree = (hit.wallType == 2 || hit.wallType == 3);
+      float treeHeightMultiplier = 2.5; // Trees are 2.5x taller than normal walls
+      if (isPineTree) {
+        wallHeight *= treeHeightMultiplier;
+      }
+
       PImage tex = wallTextures[hit.wallType];
       int texSize = tex.width;
       int texX = int(hit.textureX * texSize) % texSize;
@@ -1632,10 +1635,20 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
       float brightness = map(distance, 0, maxDepth, 1.0, 0.2);
       brightness = constrain(brightness, 0.2, 1.0);
       if (hit.horizontal) brightness *= 0.7;
+
+      // For pine trees, apply gradient brightness (darker at top for canopy effect)
       for (int y = 0; y < wallHeight; y++) {
         int texY = int(map(y, 0, wallHeight, 0, texSize)) % texSize;
         color c = tex.pixels[texY * texSize + texX];
-        fill(red(c) * brightness, green(c) * brightness, blue(c) * brightness);
+
+        float finalBrightness = brightness;
+        if (isPineTree) {
+          // Add subtle darkening toward the top of the tree (canopy effect)
+          float heightFactor = map(y, 0, wallHeight, 1.0, 0.7);
+          finalBrightness *= heightFactor;
+        }
+
+        fill(red(c) * finalBrightness, green(c) * finalBrightness, blue(c) * finalBrightness);
         noStroke();
         rect(x, h/2 - wallHeight/2 + y, sliceWidth, 2);
       }
@@ -1689,6 +1702,90 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   drawBloodOverlay(p, w, h);
   drawHUD(p, w, h);
   popMatrix();
+}
+
+void drawFloorWithTextures(Player p, int w, int h) {
+  // Draw textured floor using raycasting for each column
+  float rayAngle = p.angle - fov/2;
+  float rayStep = fov / numRays;
+
+  for (int i = 0; i < numRays; i++) {
+    float x = map(i, 0, numRays, 0, w);
+    float sliceWidth = w / float(numRays) + 1;
+
+    // For each vertical slice, draw floor texture from horizon down
+    // Sample at intervals to balance performance and quality
+    int stepSize = 2; // Sample every 2 pixels for performance
+
+    for (int y = h/2; y < h; y += stepSize) {
+      // Calculate distance to floor point at this screen y coordinate
+      float screenDistance = float(y - h/2);
+      if (screenDistance < 1) continue;
+
+      // Calculate world distance to floor using perspective projection
+      // The further from horizon, the closer the floor point
+      float floorDistance = (h * tileSize) / (2.0 * screenDistance);
+
+      if (floorDistance > maxDepth || floorDistance < 0.1) continue;
+
+      // Calculate world position of floor point
+      float worldX = p.x + cos(rayAngle) * floorDistance;
+      float worldY = p.y + sin(rayAngle) * floorDistance;
+
+      // Determine which tile this floor point is on
+      int tileX = int(worldX / tileSize);
+      int tileY = int(worldY / tileSize);
+
+      // Check if tile is within map bounds
+      if (tileX >= 0 && tileX < map[0].length && tileY >= 0 && tileY < map.length) {
+        int tileType = map[tileY][tileX];
+
+        // Select appropriate texture based on tile type
+        PImage tex;
+        if (tileType == 5 && creekTexture != null) {
+          // Creek tile - use creek texture
+          tex = creekTexture;
+        } else if (tileType == 0 && floorTexture != null) {
+          // Empty floor tile - use regular floor texture
+          tex = floorTexture;
+        } else {
+          // Wall tile or missing texture - skip rendering (will show solid color)
+          continue;
+        }
+
+        // Calculate texture coordinates
+        int texSize = tex.width;
+        int texX = int(worldX % tileSize / tileSize * texSize) % texSize;
+        int texY = int(worldY % tileSize / tileSize * texSize) % texSize;
+
+        if (texX < 0) texX += texSize;
+        if (texY < 0) texY += texSize;
+
+        // Sample texture
+        color c = tex.pixels[texY * texSize + texX];
+
+        // Apply distance-based brightness/fog
+        float brightness = map(floorDistance, 0, maxDepth, 0.8, 0.2);
+        brightness = constrain(brightness, 0.2, 0.8);
+
+        // Draw the textured floor pixel
+        fill(red(c) * brightness, green(c) * brightness, blue(c) * brightness);
+        noStroke();
+        rect(x, y, sliceWidth, stepSize);
+      } else {
+        // Out of bounds - draw solid color
+        if (currentMapIndex == 0) {
+          fill(60 * 0.5, 50 * 0.5, 40 * 0.5); // Warehouse concrete (darkened)
+        } else {
+          fill(45 * 0.5, 65 * 0.5, 35 * 0.5); // Forest grass (darkened)
+        }
+        noStroke();
+        rect(x, y, sliceWidth, stepSize);
+      }
+    }
+
+    rayAngle += rayStep;
+  }
 }
 
 void drawBloodParticle(Player viewer, BloodParticle bp, int w, int h) {
