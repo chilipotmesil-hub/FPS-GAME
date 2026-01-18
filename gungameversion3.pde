@@ -54,7 +54,7 @@ int numMaps = 3;
 
 // Map
 int mapSize = 16;
-int mapSizeBeach = 32; // Beach map is larger
+int mapSizeBeach = 36; // Beach map is larger (16x36)
 int tileSize = 50;
 int[][] currentMap;
 
@@ -100,42 +100,47 @@ int[][] mapForestClearing = {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-// Sunset Beach map
-// 9=invisible shoreline barrier
+// Sunset Beach map (16x36 - longer vertical layout)
+// 9=ocean water (renders as water texture, blocks movement)
+// 7=shoreline sand (passable, water texture at edge)
 // Beach map uses sprite-based obstacles instead of wall tiles
 int[][] mapSunsetBeach = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9}
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}, // Row 0 - Top wall
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 1
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 2
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 3
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 4
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 5
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 6
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 7
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 8
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 9
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 10
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 11
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 12
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 13
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 14
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 15
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 16
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 17
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 18
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, // Row 19 - Last beach row
+  {1,7,7,7,7,7,7,7,7,7,7,7,7,7,7,1}, // Row 20 - Shoreline transition
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 21 - Ocean start
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 22
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 23
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 24
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 25
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 26
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 27
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 28
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 29
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 30
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 31
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 32
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 33
+  {1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1}, // Row 34
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}  // Row 35 - Bottom wall
 };
 
 // Reference to active map (will point to one of the above)
@@ -271,22 +276,23 @@ void selectMap(int mapIndex) {
       player2.angle = PI;
     }
   } else if (mapIndex == 2) {
-    // Sunset Beach
+    // Sunset Beach (16x36 map)
     map = mapSunsetBeach;
     currentMap = mapSunsetBeach;
     wallTextures = wallTexturesBeach;
     floorTexture = floorTextureBeach;
     skyboxTexture = skyboxTextureBeach;
     initializeBeachObstacles();
-    // Reset player positions for larger beach map
+    // Reset player positions for 16x36 beach map
+    // Map is 800 wide x 1800 tall, beach area is rows 1-19 (Y: 50-950)
     if (player1 != null) {
-      player1.x = 150;
-      player1.y = 150;
+      player1.x = 100;
+      player1.y = 100;
       player1.angle = PI/4;
     }
     if (player2 != null) {
-      player2.x = 550;
-      player2.y = 1300;
+      player2.x = 650;
+      player2.y = 850;
       player2.angle = -3*PI/4;
     }
   }
@@ -295,16 +301,16 @@ void selectMap(int mapIndex) {
 void initializeBeachObstacles() {
   beachObstacles.clear();
 
-  // Add palm trees - well spaced across the larger beach area
-  beachObstacles.add(new BeachObstacle(200, 250, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(450, 450, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(300, 700, 20, palmTreeSprite, "palm1"));
-  beachObstacles.add(new BeachObstacle(550, 900, 20, palmTreeSprite2, "palm2"));
-  beachObstacles.add(new BeachObstacle(200, 1200, 20, palmTreeSprite, "palm1"));
+  // Add palm trees - spaced across beach area (16x36 map: X: 50-700, Y: 50-950)
+  beachObstacles.add(new BeachObstacle(150, 200, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(550, 250, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(300, 450, 20, palmTreeSprite, "palm1"));
+  beachObstacles.add(new BeachObstacle(200, 650, 20, palmTreeSprite2, "palm2"));
+  beachObstacles.add(new BeachObstacle(600, 700, 20, palmTreeSprite, "palm1"));
 
-  // Add beach umbrellas - fewer, well spaced
-  beachObstacles.add(new BeachObstacle(400, 600, 15, beachUmbrellaSprite, "umbrella"));
-  beachObstacles.add(new BeachObstacle(350, 1000, 15, beachUmbrellaSprite, "umbrella"));
+  // Add beach umbrellas - spaced throughout the beach
+  beachObstacles.add(new BeachObstacle(450, 400, 15, beachUmbrellaSprite, "umbrella"));
+  beachObstacles.add(new BeachObstacle(350, 800, 15, beachUmbrellaSprite, "umbrella"));
 }
 
 void draw() {
@@ -483,20 +489,22 @@ void drawMapSelectScreen() {
   
   // Draw minimap preview
   int[][] previewMap;
-  int currentMapSize = mapSize;
   if (currentMapIndex == 0) {
     previewMap = mapClassicCargo;
   } else if (currentMapIndex == 1) {
     previewMap = mapForestClearing;
   } else {
     previewMap = mapSunsetBeach;
-    currentMapSize = mapSizeBeach;
   }
-  float cellW = previewW / currentMapSize;
-  float cellH = previewH / currentMapSize;
 
-  for (int y = 0; y < currentMapSize; y++) {
-    for (int x = 0; x < currentMapSize; x++) {
+  // Use actual map dimensions for proper rendering
+  int mapWidth = previewMap[0].length;
+  int mapHeight = previewMap.length;
+  float cellW = previewW / mapWidth;
+  float cellH = previewH / mapHeight;
+
+  for (int y = 0; y < mapHeight; y++) {
+    for (int x = 0; x < mapWidth; x++) {
       int cell = previewMap[y][x];
       if (cell == 0) {
         // Floor
@@ -2160,9 +2168,14 @@ void spawnBloodPool(float x, float y) {
 void spawnRandomWeapon() {
   int attempts = 0;
   float wx = 0, wy = 0;
+
+  // Get current map dimensions
+  int currentMapWidth = map[0].length;
+  int currentMapHeight = map.length;
+
   while (attempts < 100) {
-    int gx = int(random(2, mapSize - 2));
-    int gy = int(random(2, mapSize - 2));
+    int gx = int(random(2, currentMapWidth - 2));
+    int gy = int(random(2, currentMapHeight - 2));
     if (map[gy][gx] == 0) {
       wx = gx * tileSize + tileSize/2;
       wy = gy * tileSize + tileSize/2;
@@ -2179,14 +2192,19 @@ void spawnRandomWeapon() {
 void spawnRandomHealthKit() {
   int attempts = 0;
   float hx = 0, hy = 0;
+
+  // Get current map dimensions
+  int currentMapWidth = map[0].length;
+  int currentMapHeight = map.length;
+
   while (attempts < 100) {
-    int gx = int(random(2, mapSize - 2));
-    int gy = int(random(2, mapSize - 2));
+    int gx = int(random(2, currentMapWidth - 2));
+    int gy = int(random(2, currentMapHeight - 2));
     if (map[gy][gx] == 0) {
       hx = gx * tileSize + tileSize/2;
       hy = gy * tileSize + tileSize/2;
       // Make sure it's not too close to players or existing pickups
-      if (dist(hx, hy, player1.x, player1.y) > 100 && 
+      if (dist(hx, hy, player1.x, player1.y) > 100 &&
           dist(hx, hy, player2.x, player2.y) > 100) {
         // Also check it's not on top of a weapon
         boolean tooClose = false;
@@ -2933,17 +2951,22 @@ RayHit castRay(float x, float y, float angle) {
   float dist = 0;
   float rayX = x;
   float rayY = y;
+
+  // Get current map dimensions
+  int currentMapWidth = map[0].length;
+  int currentMapHeight = map.length;
+
   while (dist < maxDepth) {
     rayX += rayDirX * 2;
     rayY += rayDirY * 2;
     dist += 2;
     int gridX = int(rayX / tileSize);
     int gridY = int(rayY / tileSize);
-    if (gridX < 0 || gridX >= mapSize || gridY < 0 || gridY >= mapSize) {
+    if (gridX < 0 || gridX >= currentMapWidth || gridY < 0 || gridY >= currentMapHeight) {
       return new RayHit(dist, 1, false, 0);
     }
     int tile = map[gridY][gridX];
-    // Creek (5) is passable, don't treat as wall
+    // Creek (5) and shoreline (7) are passable, ocean (9) is not
     if (tile != 0 && tile != 5 && tile != 7) {
       boolean horizontal = abs((rayY % tileSize) - tileSize/2) < abs((rayX % tileSize) - tileSize/2);
       float textureX = horizontal ? (rayX % tileSize) / tileSize : (rayY % tileSize) / tileSize;
@@ -2977,26 +3000,35 @@ void checkPlayerHits() {
 boolean checkCollision(float x, float y) {
   int gridX = int(x / tileSize);
   int gridY = int(y / tileSize);
-  if (gridX < 0 || gridX >= mapSize || gridY < 0 || gridY >= mapSize) return true;
+
+  // Get current map dimensions
+  int currentMapWidth = map[0].length;
+  int currentMapHeight = map.length;
+
+  if (gridX < 0 || gridX >= currentMapWidth || gridY < 0 || gridY >= currentMapHeight) return true;
   int tile = map[gridY][gridX];
-  // Creek (5) is passable
+  // Creek (5) and shoreline (7) are passable, ocean (9) is not
   return tile != 0 && tile != 5 && tile != 7;
 }
 
 boolean checkCollisionWithRadius(float x, float y, float radius) {
   int gridX = int(x / tileSize);
   int gridY = int(y / tileSize);
-  int currentSize = (currentMapIndex == 2) ? mapSizeBeach : mapSize;
-  if (gridX < 0 || gridX >= currentSize || gridY < 0 || gridY >= currentSize) return true;
+
+  // Get current map dimensions
+  int currentMapWidth = map[0].length;
+  int currentMapHeight = map.length;
+
+  if (gridX < 0 || gridX >= currentMapWidth || gridY < 0 || gridY >= currentMapHeight) return true;
   int tile = map[gridY][gridX];
-  if (tile != 0 && tile != 5 && tile != 7) return true; // Creek (5) and shoreline (7) are passable
+  if (tile != 0 && tile != 5 && tile != 7) return true; // Creek (5) and shoreline (7) are passable, ocean (9) is not
   float[][] testPoints = {{x + radius, y}, {x - radius, y}, {x, y + radius}, {x, y - radius}};
   for (float[] point : testPoints) {
     int gx = int(point[0] / tileSize);
     int gy = int(point[1] / tileSize);
-    if (gx < 0 || gx >= currentSize || gy < 0 || gy >= currentSize) return true;
+    if (gx < 0 || gx >= currentMapWidth || gy < 0 || gy >= currentMapHeight) return true;
     int t = map[gy][gx];
-    if (t != 0 && t != 5 && t != 7) return true; // Creek (5) and shoreline (7) are passable
+    if (t != 0 && t != 5 && t != 7) return true; // Creek (5) and shoreline (7) are passable, ocean (9) is not
   }
 
   // Check beach obstacle collisions
@@ -3329,10 +3361,10 @@ class Player {
     
     x = spawnPoints[bestSpawn][0] * tileSize + tileSize/2;
     y = spawnPoints[bestSpawn][1] * tileSize + tileSize/2;
-    
+
     // Face toward center of map
-    float centerX = mapSize * tileSize / 2;
-    float centerY = mapSize * tileSize / 2;
+    float centerX = map[0].length * tileSize / 2;
+    float centerY = map.length * tileSize / 2;
     angle = atan2(centerY - y, centerX - x);
   }
 }
