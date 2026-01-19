@@ -2275,10 +2275,6 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   pushMatrix();
   translate(startX, startY);
 
-  // Reset any existing clip and set viewport bounds to prevent sprite bleed
-  noClip();
-  clip(0, 0, w, h);
-
   // Draw skybox
   if (skyboxTexture != null) {
     drawSkybox(p, w, h);
@@ -2433,9 +2429,13 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
         if (hit == null || hit.distance > distance) {
           float screenX = w/2 + (angleDiff / (fov/2)) * (w/2);
           float size = map(distance, 0, 300, 8, 2);
-          fill(255, 255, 0, 200);
-          noStroke();
-          ellipse(screenX, h/2, size, size);
+
+          // Check if bullet is within viewport bounds (prevent bleed to other player's screen)
+          if (screenX + size/2 >= 0 && screenX - size/2 <= w) {
+            fill(255, 255, 0, 200);
+            noStroke();
+            ellipse(screenX, h/2, size, size);
+          }
         }
       }
     } else if (sd.type.equals("sailboat")) {
@@ -2445,9 +2445,6 @@ void renderPlayer(Player p, int startX, int startY, int w, int h) {
   
   drawBloodOverlay(p, w, h);
   drawHUD(p, w, h);
-
-  // Clear clip region before restoring matrix
-  noClip();
   popMatrix();
 }
 
@@ -2560,9 +2557,15 @@ void drawBloodParticle(Player viewer, BloodParticle bp, int w, int h) {
       float heightOffset = (bp.z * h) / distance;
       float screenY = baseY - heightOffset;
       float size = map(distance, 0, 300, 16, 4) * bp.size;
+
+      // Check if sprite is within viewport bounds (prevent bleed to other player's screen)
+      if (screenX + size/2 < 0 || screenX - size/2 > w) {
+        return; // Sprite is completely outside viewport
+      }
+
       float brightness = map(distance, 0, maxDepth, 1, 0.3);
       brightness = constrain(brightness, 0.3, 1);
-      
+
       // Use texture if available, otherwise fall back to ellipse
       if (bloodParticleTexture != null) {
         pushStyle();
@@ -2960,6 +2963,12 @@ void drawBeachObstacle(Player viewer, BeachObstacle obs, int w, int h) {
       float spriteHeight = (obs.sprite.height * h) / distance;
       float spriteWidth = (obs.sprite.width * spriteHeight) / obs.sprite.height;
 
+      // Check if sprite is within viewport bounds (prevent bleed to other player's screen)
+      // Sprite is centered at screenX, so check if any part is visible in [0, w]
+      if (screenX + spriteWidth/2 < 0 || screenX - spriteWidth/2 > w) {
+        return; // Sprite is completely outside viewport
+      }
+
       // Position sprite at eye level, then move up by quarter sprite height
       float screenY = h/2 - (spriteHeight / 4);
 
@@ -2993,6 +3002,11 @@ void drawSailboat(Player viewer, int w, int h) {
     // Small sailboat on distant horizon
     float spriteHeight = h * 0.08; // Fixed small size (8% of screen height)
     float spriteWidth = (sailboatSprite.width * spriteHeight) / sailboatSprite.height;
+
+    // Check if sprite is within viewport bounds (prevent bleed to other player's screen)
+    if (screenX + spriteWidth/2 < 0 || screenX - spriteWidth/2 > w) {
+      return; // Sprite is completely outside viewport
+    }
 
     // Position sailboat above the horizon line (moved up by 1 sprite height)
     float horizonY = h / 2 - spriteHeight / 2;
